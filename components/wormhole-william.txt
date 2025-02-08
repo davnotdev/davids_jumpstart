@@ -1,0 +1,4 @@
+[package]
+wormhole-william
+https://github.com/psanford/wormhole-william/releases/download/v1.0.7/wormhole-william-linux-amd64
+wormhole-william

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+gadgetmountpoint=$1
+
+function help() {
+    echo "Usage:"
+    echo -e "\tqb <MOUNTPOINT> [COMPONENTS]..."
+    echo -e ""
+}
+
+if [[ -z $gadgetmountpoint ]]; then
+    help
+    exit 1
+fi
+

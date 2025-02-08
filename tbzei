@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+mountpoint="$1"
+cmd="$2"
+pkgname="$3"
+url="$4"
+installfiles=("${@:5}")
+
+function help() {
+    echo "Usage:"
+    echo -e "\ttzei pains  <MOUNT> <PKGNAME> <URL> [INSTALL]..."
+    echo -e "\ttzei par    <MOUNT> <PKGNAME> <URL>"
+    echo -e "\ttzei path   <MOUNT> "
+    echo -e ""
+}
+
+if [[ -z "$mountpoint" ]]; then
+    help
+    exit 1
+fi
+
+mkdir -p $mountpoint
+mkdir -p $mountpoint/pkgs/
+mkdir -p $mountpoint/bin/
+
+function download_to_file() {
+    if command -v wget &> /dev/null; then
+        wget -q -O - $1 > $2 || exit 1
+    elif command -v curl &> /dev/null; then
+        curl $1 > $2 || exit 1
+    else 
+        echo "No suitable download command, exiting."
+        exit 1
+    fi
+}
+
+function pains() {
+    echo "P & INS $pkgname"
+    
+    pkgdest="$mountpoint/pkgs/$pkgname"
+    pkgdl="$mountpoint/pkgs/$pkgname/archive"
+
+    mkdir -p $pkgdest
+
+    download_to_file $url $pkgdl
+
+
+    if [[ "$url" == *.zip ]]; then
+        unzip "$pkgdl" -d $pkgdest || exit 1
+    else
+        first_bytes=$(head -c 4 "$pkgdl" | od -An -t x1 | tr -d '[:space:]')
+        if [[ "$first_bytes" == "7f454c46" ]]; then
+            chmod +x $pkgdl
+            mv $pkgdl "$mountpoint/pkgs/$pkgname/$pkgname"
+        else
+            tar -xf "$pkgdl" -C $pkgdest || exit 1
+        fi
+    fi
+
+    echo "  - [i] $pkgname"
+
+    for file in "${installfiles[@]}"; do
+        readlink -f $(find . -type f -iname $file) | while read -r file; do
+            rm -f $mountpoint/bin/$(basename $file)
+            ln -s "$file" $mountpoint/bin
+            echo "  - [l] $(basename $file)"
+        done
+    done
+
+    rm -f $pkgdl
+}
+
+function par() {
+    pkgdest="$mountpoint/pkgs/$pkgname"
+
+    rm -rf $pkgdest
+    find -L "$mountpoint/bin" -wholename "$mountpoint/bin" -o -type d -prune -o -type l -exec rm {} +
+
+    echo "  - [r] $pkgname"
+}
+
+case "$cmd" in
+    pains)
+        if [[ -z "$pkgname" || -z "$url" ]]; then
+            help
+            exit 1
+        fi
+        pains
+        ;;
+    par)
+        if [[ -z "$pkgname" ]]; then
+            help
+            exit 1
+        fi
+        par
+        ;;
+    path)
+        readlink -f "$mountpoint/bin"
+        ;;
+    *)
+        echo "Unknown command: $cmd"
+        exit 1
+        ;;
+esac
+

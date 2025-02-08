@@ -1,0 +1,4 @@
+[package]
+bat
+https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-gnu.tar.gz
+bat
