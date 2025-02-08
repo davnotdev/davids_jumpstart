@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+GADGETS_DL="https://github.com/davnotdev/davids_jumpstart/tarball/main"
+
+mountpoint=$1
+components=("${@:2}")
+
+function help() {
+    echo "Usage:"
+    echo -e "\tjst <MOUNTPOINT> [COMPONENTS]..."
+    echo -e ""
+}
+
+if [[ -z $mountpoint ]]; then
+    help
+    exit 1
+fi
+
+function download_to_file() {
+    if command -v wget &> /dev/null; then
+        wget -q -O - $1 > $2 || exit 1
+    elif command -v curl &> /dev/null; then
+        curl $1 > $2 || exit 1
+    else 
+        echo "No suitable download command, exiting."
+        exit 1
+    fi
+}
+
+mkdir -p $mountpoint
+
+echo "Fetching from $GADGETS_DL"
+
+download_to_file $GADGETS_DL $mountpoint/archive
+tar xf $mountpoint/archive --strip-components=1 -C $mountpoint/
+rm $mountpoint/archive
+
+if [ ${#components[@]} -ne 0 ]; then
+    echo "Installing Components"
+    $mountpoint/gadi $mountpoint $components
+fi
+
+echo "Done"
+

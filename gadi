@@ -35,8 +35,6 @@ function install_components() {
                 read -r url
                 read -r -a bins
 
-                echo $bins
-
                 $currentdir/tbzei $mountpoint pains $pkgname $url $bins
             fi
         done < "$currentdir/components/$component.txt"

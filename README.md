@@ -1,9 +1,9 @@
-# David's Gadgets
+# David's Jumpstart
 
-## Quick Boot
+## Jumpstart
 
-```
-./qb [COMPONENTS]...
+```sh
+./jst <MOUNTPOINT> [COMPONENTS]...
 
 curl ...
 
@@ -12,8 +12,8 @@ wget -q -O - ...
 
 ## Gadgets Installer
 
-```
-./gadi [COMPONENTS]...
+```sh
+./gadi <MOUNTPOINT> [COMPONENTS]...
 ```
 
 ### Components
@@ -30,7 +30,7 @@ dev:
 
 ## Tarball, Zip, Everything Installer! (tzei)
 
-```
+```sh
 # Pull And INStall, then link [INSTALL]... to $MOUNT/bin
 tzei pains  <MOUNT> <PKGNAME> <URL> [INSTALL]...
 
