@@ -1,5 +1,15 @@
 # David's Jumpstart
 
+## Setup
+
+```bash
+curl https://raw.githubusercontent.com/davnotdev/davids_jumpstart/refs/heads/main/jst | bash -s ~/.davidjst
+
+# OR
+
+wget -q -O - https://raw.githubusercontent.com/davnotdev/davids_jumpstart/refs/heads/main/jst | bash -s ~/.davidjst
+```
+
 ## Jumpstart
 
 ```sh
