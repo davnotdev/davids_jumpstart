@@ -1,5 +1,15 @@
 # David's Jumpstart
 
+This is a set of scripts I use to jumpstart new systems with tools that I have been accustomed to without the need for root or permissions. 
+This has proved useful for:
+
+- Remote Development Servers
+- Computer Labs
+- Virtual Machines
+- etc
+
+All that is required is `coreutils`, `bash`, `unzip`, `tar` and `curl` or `wget`.
+
 ## Setup
 
 ```bash
@@ -8,16 +18,17 @@ curl https://raw.githubusercontent.com/davnotdev/davids_jumpstart/refs/heads/mai
 # OR
 
 wget -q -O - https://raw.githubusercontent.com/davnotdev/davids_jumpstart/refs/heads/main/jst | bash -s ~/.davidjst
+
+# Add PATH
+export PATH="$PATH:~/.davidjst"
 ```
+
+Now, you can use `~/.davidjst/gadi` to install components.
 
 ## Jumpstart
 
 ```sh
 ./jst <MOUNTPOINT> [COMPONENTS]...
-
-curl ...
-
-wget -q -O - ...
 ```
 
 ## Gadgets Installer
