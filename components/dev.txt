@@ -2,3 +2,4 @@
 bat
 rg
 wormhole-william
+nvim

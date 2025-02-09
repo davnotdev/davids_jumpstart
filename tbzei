@@ -10,6 +10,7 @@ function help() {
     echo "Usage:"
     echo -e "\ttzei pains  <MOUNT> <PKGNAME> <URL> [INSTALL]..."
     echo -e "\ttzei par    <MOUNT> <PKGNAME> <URL>"
+    echo -e "\ttzei pkgdir <MOUNT> <PKGNAME>"
     echo -e "\ttzei path   <MOUNT> "
     echo -e ""
 }
@@ -22,12 +23,13 @@ fi
 mkdir -p $mountpoint
 mkdir -p $mountpoint/pkgs/
 mkdir -p $mountpoint/bin/
+touch $mountpoint/.gitignore
 
 function download_to_file() {
     if command -v wget &> /dev/null; then
         wget -q -O - $1 > $2 || exit 1
     elif command -v curl &> /dev/null; then
-        curl $1 > $2 || exit 1
+        curl -L $1 > $2 || exit 1
     else 
         echo "No suitable download command, exiting."
         exit 1
@@ -35,7 +37,7 @@ function download_to_file() {
 }
 
 function pains() {
-    echo "P & INS $pkgname"
+    echo "$pkgname:"
     
     pkgdest="$mountpoint/pkgs/$pkgname"
     pkgdl="$mountpoint/pkgs/$pkgname/archive"
@@ -92,7 +94,19 @@ case "$cmd" in
             help
             exit 1
         fi
-        par
+        ;;
+    pkgdir)
+        if [[ -z "$pkgname" ]]; then
+            help
+            exit 1
+        fi
+        pkgdir=$mountpoint/pkgs/$pkgname
+        if [[ -d $pkgdir ]]; then
+            echo $(readlink -f $mountpoint/pkgs/$pkgname)
+            exit 0
+        else
+            exit 1
+        fi
         ;;
     path)
         readlink -f "$mountpoint/bin"

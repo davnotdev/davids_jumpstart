@@ -1,4 +1,4 @@
-# `component.txt` Format
+# Component Format
 
 ## Categories
 
@@ -14,6 +14,12 @@ package3
 - Circular Dependencies are not handled.
 
 ## Package
+
+```
+<package>/
+    package.txt
+    [postinstall.sh]
+```
 
 ```
 [package]

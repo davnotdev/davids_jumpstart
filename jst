@@ -20,7 +20,7 @@ function download_to_file() {
     if command -v wget &> /dev/null; then
         wget -q -O - $1 > $2 || exit 1
     elif command -v curl &> /dev/null; then
-        curl $1 > $2 || exit 1
+        curl -L $1 > $2 || exit 1
     else 
         echo "No suitable download command, exiting."
         exit 1
